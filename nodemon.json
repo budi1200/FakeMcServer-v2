@@ -1,0 +1,7 @@
+{
+    "watch": ["*"],
+    "ext": "go",
+    "ignore": ["go.sum"],
+    "exec": "go run server.go",
+    "signal": "SIGTERM"
+}

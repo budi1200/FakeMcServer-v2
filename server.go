@@ -103,6 +103,7 @@ func onServerPing(motd string, playerCount int) func(e *proxy.PingEvent) {
 
 	return func(e *proxy.PingEvent) {
 		p := e.Ping()
+		p.Version.Name = "SloCraft"
 		p.Description = message.(*component.Text)
 		p.Players.Max = playerCount
 		p.Players.Online = playerCount

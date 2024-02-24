@@ -3,21 +3,21 @@ package main
 import (
 	"context"
 	"fmt"
+	"github.com/goccy/go-yaml"
+	"github.com/robinbraemer/event"
+	"go.minekube.com/gate/cmd/gate"
+	"go.minekube.com/gate/pkg/util/configutil"
 	"os"
 	"time"
 
-	"github.com/pelletier/go-toml/v2"
-	"github.com/robinbraemer/event"
-	"go.minekube.com/common/minecraft/component"
 	"go.minekube.com/common/minecraft/component/codec/legacy"
-	"go.minekube.com/gate/cmd/gate"
 	"go.minekube.com/gate/pkg/edition/java/proxy"
 )
 
 type CustomConfig struct {
 	Custom struct {
-		PlayerCount int
-		KickMessage string
+		PlayerCount int    `yaml:"playerCount"`
+		KickMessage string `yaml:"kickMessage"`
 	}
 }
 
@@ -29,13 +29,13 @@ type CustomProxy struct {
 var legacyCodec = &legacy.Legacy{Char: legacy.AmpersandChar}
 
 func loadCustomConfig(cfg *CustomConfig) {
-	data, err := os.ReadFile("config.toml")
+	data, err := os.ReadFile("config.yml")
 
 	if err != nil {
 		panic(err)
 	}
 
-	err = toml.Unmarshal(data, &cfg)
+	err = yaml.Unmarshal(data, cfg)
 
 	if err != nil {
 		panic(err)
@@ -82,11 +82,11 @@ func (p *CustomProxy) onPlayerLogin(e *proxy.PostLoginEvent) {
 		panic("Error parsing kick message")
 	}
 
-	time := time.Now()
+	t := time.Now()
 
 	fmt.Printf(
 		"[%s]: %s (%s) tried to connect!\n",
-		time.Format("02.01.2006 15:04"),
+		t.Format("02.01.2006 15:04"),
 		e.Player().GameProfile().Name,
 		e.Player().GameProfile().ID.String(),
 	)
@@ -94,17 +94,17 @@ func (p *CustomProxy) onPlayerLogin(e *proxy.PostLoginEvent) {
 	e.Player().Disconnect(message)
 }
 
-func onServerPing(motd string, playerCount int) func(e *proxy.PingEvent) {
-	message, err := legacyCodec.Unmarshal([]byte(motd))
-
-	if err != nil {
-		panic("Error parsing motd")
-	}
+func onServerPing(motd *configutil.TextComponent, playerCount int) func(e *proxy.PingEvent) {
+	//message, err := legacyCodec.Unmarshal([]byte(motd))
+	//
+	//if err != nil {
+	//	panic("Error parsing motd")
+	//}
 
 	return func(e *proxy.PingEvent) {
 		p := e.Ping()
 		p.Version.Name = "SloCraft"
-		p.Description = message.(*component.Text)
+		p.Description = motd.T()
 		p.Players.Max = playerCount
 		p.Players.Online = playerCount
 	}

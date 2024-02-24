@@ -1,0 +1,19 @@
+custom:
+  playerCount: 1200
+  kickMessage: "&fDne &a9. 5. 2022 &fje &lSloCraft &fzaprl svoja vrata. \n\nHvala vsem, ki ste bili z nami na tej poti &c❤ \n\n&fVeč informacij na &ahttps://slocraft.eu"
+
+config:
+  bind: 0.0.0.0:25565
+  onlineMode: false
+  status:
+    motd: "§f                  §c❤ §f§lSloCraft §c❤§r\n        §aZačetek konca ali konec začetka?"
+    showMaxPlayers: 1200
+    favicon: "slocraft-logo-64.png"
+    logPingRequests: false
+    announceForge: false
+  bungeePluginChannelEnabled: false
+  builtinCommands: false
+  forceKeyAuthentication: false
+  quota:
+    logins:
+      enabled: false

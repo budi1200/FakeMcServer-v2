@@ -95,12 +95,6 @@ func (p *CustomProxy) onPlayerLogin(e *proxy.PostLoginEvent) {
 }
 
 func onServerPing(motd *configutil.TextComponent, playerCount int) func(e *proxy.PingEvent) {
-	//message, err := legacyCodec.Unmarshal([]byte(motd))
-	//
-	//if err != nil {
-	//	panic("Error parsing motd")
-	//}
-
 	return func(e *proxy.PingEvent) {
 		p := e.Ping()
 		p.Version.Name = "SloCraft"
